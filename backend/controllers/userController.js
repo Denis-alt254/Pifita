@@ -45,4 +45,37 @@ const createUser = async(req, res) => {
     }
 }
 
-module.exports = {createUser};
+const Login = async(req, res) => {
+    const {username, password} = req.body;
+
+    if(!username || !password){
+        return res.status(400).json({error: "username and password are required"});
+    }
+
+    try {
+        const user = await User.findOne({username});
+
+        if(!user){
+            return res.status(401).json({error: "Invalid credentials"});
+        }
+
+        const match = await bcrypt.compare(password, user.password);
+
+        if(!match){
+            return res.status(401).json({error: "Invalid credentials"});
+        }
+
+        //payload
+        const payload = {userId: user._id, username: user.username};
+
+        //sign token
+        const token = jwt.sign(payload, secretKey, {expiresIn: '3h'});
+
+        res.status(200).json({message: "Login successfully", token});
+    } catch (error) {
+        console.error({Login_Error: error.message});
+        res.status(500).json({error: "Internal Server Error"});
+    }
+}
+
+module.exports = {createUser, Login};
