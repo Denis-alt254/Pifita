@@ -1,8 +1,7 @@
 const Budget = require("../models/Budget");
 
 const createBudget = async(req, res) => {
-    const userId = req.user._id;
-    const {userId ,category, to_spent} = req.body;
+    const {userId = req.user._id ,category, to_spent} = req.body;
     
     if(!category){
         return res.status(400).json({erro: "category is required"});
