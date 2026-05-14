@@ -31,4 +31,37 @@ const createBudget = async(req, res) => {
     }
 }
 
-module.exports = {createBudget};
+const updateBudget = async(req, res) => {
+    try {
+        const userId = req.user._id;
+        const budgetId = req.params.id;
+        const {category, to_spent} = req.body;
+
+        const budget =  await Budget.findById(budgetId);
+
+        if(!budget){
+            return res.status(404).json({error: "Budget not found"});
+        }
+
+        //verify ownership
+        if(budget.userId !== userId){
+            return res.status(403).json({error: "You can only edit your own budgets"});
+        }
+
+        const fieldsToUpdate = ["category", "to_spent"];
+
+        fieldsToUpdate.forEach(field => {
+            if(req.body[field]){
+                budget[field] = req.body[field];
+            }
+        });
+
+        const updatedFields = await budget.save();
+        res.status(200).json(updatedFields);
+    } catch (error) {
+        console.error({Updating_Budget_Error: error.message});
+        res.status(500).json({error: "Internal server error"});
+    }
+}
+
+module.exports = {createBudget, updateBudget};
