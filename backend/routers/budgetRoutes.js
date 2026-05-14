@@ -4,6 +4,6 @@ const { createBudget, updateBudget } = require('../controllers/budgetController'
 const router = express.Router();
 
 router.post('/create', authMiddleware, createBudget);
-router.post('/update', authMiddleware, updateBudget);
+router.patch('/update/:id', authMiddleware, updateBudget);
 
 module.exports = router;
