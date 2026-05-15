@@ -1,5 +1,16 @@
 const Budget = require("../models/Budget");
 
+const getBudgetsByUser = async(req, res) => {
+    try {
+        const userId = req.user._id;
+        const budgets = await Budget.find({userId: userId});
+        res.status(200).json(budgets);
+    } catch (error) {
+        console.error({Error_Getting_BudgetsByUser: error.message});
+        res.status(500).json({error: "Internal server error"});
+    }
+}
+
 const createBudget = async(req, res) => {
     const {userId = req.user._id ,category, to_spent} = req.body;
     
@@ -87,4 +98,4 @@ const deleteBudget = async(req, res) => {
     }
 }
 
-module.exports = {createBudget, updateBudget, deleteBudget};
+module.exports = {createBudget, updateBudget, deleteBudget, getBudgetsByUser};
