@@ -80,7 +80,7 @@ const deleteBudget = async(req, res) => {
         }
 
         await budget.deleteOne();
-        res.status(200).json({message: "Budget deleted successfully"});
+        res.status(204).json({message: "Budget deleted successfully"});
     } catch (error) {
         console.error({Error_Deleting_Budget: error.message});
         res.status(500).json({error: "Internal server error"});
