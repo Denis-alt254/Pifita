@@ -51,7 +51,7 @@ const updateExpense = async(req, res) => {
     const {amount, note, category} = req.body;
 
     if(!category){
-        return res.status(404).json({error: "category not found"});
+        return res.status(404).json({error: "category is required"});
     }
 
     try {
