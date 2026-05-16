@@ -1,6 +1,21 @@
 const Budget = require("../models/Budget");
 const Expense = require("../models/Expense");
 
+const getExpensesByUser = async(req, res) => {
+    try {
+        const userId = req.user._id;
+        const expenses = await Expense.find({userId: userId});
+
+        if(expenses == []){
+            return res.status(404).json({error: "Expenses not found"});
+        }
+        res.status(200).json(expenses);
+    } catch (error) {
+        console.error({Error_Getting_Epenses_PerUser: error.message});
+        res.status(500).json({error: "Internal server error"});
+    }
+}
+
 const createExpense = async(req, res) => {
     const{amount, note, userId = req.user._id, category} = req.body;
 
@@ -69,4 +84,4 @@ const updateExpense = async(req, res => {
     }
 })
 
-module.exports = {createExpense, updateExpense};
+module.exports = {createExpense, updateExpense, getExpensesByUser};
