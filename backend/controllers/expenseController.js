@@ -47,7 +47,7 @@ const createExpense = async(req, res) => {
     }
 }
 
-const updateExpense = async(req, res => {
+const updateExpense = async(req, res) => {
     const {amount, note, category} = req.body;
 
     if(!category){
@@ -82,7 +82,7 @@ const updateExpense = async(req, res => {
         console.error({Error_Updating_Expenses: error.message});
         res.status(500).json({error: "Internal server error"});
     }
-})
+}
 
 const deleteExpense = async(req, res) => {
     try {
