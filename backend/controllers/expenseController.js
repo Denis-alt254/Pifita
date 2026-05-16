@@ -3,7 +3,7 @@ const Expense = require("../models/Expense");
 
 const getExpensesByUser = async(req, res) => {
     try {
-        const userId = req.user._id;
+        const userId = req.user.userId;
         const expenses = await Expense.find({userId: userId});
 
         if(expenses == []){
@@ -17,7 +17,7 @@ const getExpensesByUser = async(req, res) => {
 }
 
 const createExpense = async(req, res) => {
-    const{amount, note, userId = req.user._id, category} = req.body;
+    const{amount, note, userId = req.user.userId, category} = req.body;
 
     if(!amount||!category){
         return res.status(400).json({error: "amount and category are required"});
@@ -55,7 +55,7 @@ const updateExpense = async(req, res) => {
     }
 
     try {
-        const userId = req.user._id;
+        const userId = req.user.userId;
         const expenseId = req.params.id;
         
         const expense = await Expense.findById(expenseId);
@@ -64,7 +64,7 @@ const updateExpense = async(req, res) => {
             return res.status(404).json({error: "Expense doesn't exist"});
         }
 
-        if(expense.userId !== userId){
+        if(expense.userId != userId){
             return res.status(403).json({error: "You are only allowed to update your expenses."});
         }
 
@@ -86,7 +86,7 @@ const updateExpense = async(req, res) => {
 
 const deleteExpense = async(req, res) => {
     try {
-        const userId = req.user._id;
+        const userId = req.user.userId;
         const expenseId = req.params.id;
 
         const expense = await Expense.findById(expenseId);
@@ -96,7 +96,7 @@ const deleteExpense = async(req, res) => {
         }
 
         //verify ownership
-        if(expense.userId !== userId){
+        if(expense.userId != userId){
             return res.status(403).json({error: "You can only delete your expenses."});
         }
 
