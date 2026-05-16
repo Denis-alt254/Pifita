@@ -84,4 +84,28 @@ const updateExpense = async(req, res => {
     }
 })
 
-module.exports = {createExpense, updateExpense, getExpensesByUser};
+const deleteExpense = async(req, res) => {
+    try {
+        const userId = req.user._id;
+        const expenseId = req.params.id;
+
+        const expense = await Expense.findById(expenseId);
+
+        if(!expense){
+            return res.status(404).json({error: "Expense not found"});
+        }
+
+        //verify ownership
+        if(expense.userId !== userId){
+            return res.status(403).json({error: "You can only delete your expenses."});
+        }
+
+        await expense.deleteOne();
+        res.status(204).json({message: "Expense deleted successfully"});
+    } catch (error) {
+        console.error({Error_deleting_Expense: error.message});
+        res.status(500).json({error: "Internal server error"});
+    }
+}
+
+module.exports = {createExpense, updateExpense, getExpensesByUser, deleteExpense};
