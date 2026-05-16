@@ -12,7 +12,7 @@ const getBudgetsByUser = async(req, res) => {
 }
 
 const createBudget = async(req, res) => {
-    const {userId = req.user._id ,category, to_spent} = req.body;
+    const {userId = req.user.userId ,category, to_spent} = req.body;
     
     if(!category){
         return res.status(400).json({erro: "category is required"});
@@ -43,7 +43,7 @@ const createBudget = async(req, res) => {
 
 const updateBudget = async(req, res) => {
     try {
-        const userId = req.user._id;
+        const userId = req.user.userId;
         const budgetId = req.params.id;
         const {category, to_spent} = req.body;
 
@@ -54,7 +54,7 @@ const updateBudget = async(req, res) => {
         }
 
         //verify ownership
-        if(budget.userId !== userId){
+        if(budget.userId != userId){
             return res.status(403).json({error: "You can only edit your own budgets"});
         }
 
@@ -76,7 +76,7 @@ const updateBudget = async(req, res) => {
 
 const deleteBudget = async(req, res) => {
     try {
-        const userId = req.user._id;
+        const userId = req.user.userId;
         const budgetId = req.params.id;
 
         const budget = await Budget.findById(budgetId);
@@ -86,7 +86,7 @@ const deleteBudget = async(req, res) => {
         }
 
         //check the ownership
-        if(budget.userId !== userId){
+        if(budget.userId != userId){
             return res.status(403).json({error: "You can only delete your own budgets"});
         }
 
