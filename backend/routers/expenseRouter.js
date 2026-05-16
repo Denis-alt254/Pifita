@@ -4,8 +4,8 @@ const { createExpense, updateExpense, getExpensesByUser, deleteExpense } = requi
 const router = express.Router();
 
 router.post('/create', authMiddleware, createExpense);
-router.patch('/update', authMiddleware, updateExpense);
+router.patch('/update/:id', authMiddleware, updateExpense);
 router.get('/', authMiddleware, getExpensesByUser);
-router.delete('/delete', authMiddleware, deleteExpense);
+router.delete('/delete/:id', authMiddleware, deleteExpense);
 
 module.exports = router;
